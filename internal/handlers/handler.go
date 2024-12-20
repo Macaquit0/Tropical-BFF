@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"context"
+
+	"github.com/Macaquit0/Tropical-BFF/internal/services"
+	sharedhttp "github.com/Macaquit0/Tropical-BFF/pkg/http"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 	"github.com/go-chi/chi/v5"
-	"github.com/backend/bff-cognito/internal/services"
-	"github.com/backend/bff-cognito/pkg/logger"
-	sharedhttp "github.com/backend/bff-cognito/pkg/http"
 )
 
 type Services interface {
 	CreateUser(ctx context.Context, req services.CreateUserRequest) (services.CreateUserResponse, error)
-	Login(ctx context.Context, req services.LoginRequest) (services.LoginResponse, error)
+	Login(ctx context.Context, req services.LoginRequestParams) error
 	GetUserProfile(ctx context.Context, userID string) (services.GetUserProfileResponse, error)
 	UpdateUserProfile(ctx context.Context, userID string, req services.UpdateUserProfileRequest) error
 	DeleteUser(ctx context.Context, userID string) error

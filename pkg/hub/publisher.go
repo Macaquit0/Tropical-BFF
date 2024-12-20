@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/backend/bff-cognito/pkg/internalaws"
-	"github.com/backend/bff-cognito/pkg/logger"
+	"github.com/Macaquit0/Tropical-BFF/pkg/internalaws"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 )
 
 type Publisher struct {

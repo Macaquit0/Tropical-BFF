@@ -11,10 +11,10 @@ COPY . .
 RUN go mod tidy
 
 # Compilar o binário da aplicação
-RUN go build -o bff-cognito ./cmd/bff/main.go
+RUN go build -o bff ./cmd/bff/main.go
 
 # Expor a porta da aplicação
 EXPOSE 8080
 
 # Comando para rodar o servidor
-CMD ["./bff-cognito"]
+CMD ["./bff"]

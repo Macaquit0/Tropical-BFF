@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/backend/bff-cognito/pkg/errors"
-	"github.com/backend/bff-cognito/pkg/logger"
+	"github.com/Macaquit0/Tropical-BFF/pkg/errors"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 	"github.com/lib/pq"
 )
 

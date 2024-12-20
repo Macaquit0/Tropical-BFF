@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/backend/bff-cognito/pkg/errors"
-	"github.com/backend/bff-cognito/pkg/helper"
+	"github.com/Macaquit0/Tropical-BFF/pkg/errors"
+	"github.com/Macaquit0/Tropical-BFF/pkg/helper"
 	"github.com/go-playground/validator/v10"
 )
 

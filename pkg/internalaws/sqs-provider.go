@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
-	"github.com/backend/bff-cognito/pkg/logger"
 )
 
 var maxMessages = int32(10)

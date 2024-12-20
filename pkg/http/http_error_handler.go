@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/backend/bff-cognito/pkg/errors"
+	"github.com/Macaquit0/Tropical-BFF/pkg/errors"
 	"github.com/google/uuid"
 )
 

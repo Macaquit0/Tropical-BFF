@@ -10,7 +10,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/backend/bff-cognito/pkg/logger"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 
 	"github.com/caarlos0/env"
 	packr "github.com/gobuffalo/packr/v2"

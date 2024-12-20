@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/backend/bff-cognito/pkg/errors"
-	"github.com/backend/bff-cognito/pkg/logger"
-	"github.com/backend/bff-cognito/pkg/trace"
+	"github.com/Macaquit0/Tropical-BFF/pkg/errors"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
+	"github.com/Macaquit0/Tropical-BFF/pkg/trace"
 )
 
 type Rest struct {

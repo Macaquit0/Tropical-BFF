@@ -3,8 +3,8 @@ package fbun
 import (
 	"context"
 	"database/sql"
-	"errors"
-	errors "github.com/backend/bff-cognito/pkg/errors"
+
+	errors "github.com/Macaquit0/Tropical-BFF/pkg/errors"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
@@ -30,12 +30,12 @@ func HandleError(err error) error {
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
 		case "23505":
-			return ferrors.NewDuplicatedEntryError("duplicated entry")
+			return errors.NewDuplicatedEntryError("duplicated entry")
 		}
 	}
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return ferrors.NewNotFoundError("not found")
+		return errors.NewNotFoundError("not found")
 	}
 
 	return err

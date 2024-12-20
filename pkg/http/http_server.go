@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/backend/bff-cognito/pkg/logger"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 	"github.com/go-chi/chi/v5"
 
-	"github.com/backend/bff-cognito/pkg/metric"
+	"github.com/Macaquit0/Tropical-BFF/pkg/metric"
 )
 
 type Server struct {

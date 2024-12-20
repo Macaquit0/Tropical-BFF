@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/backend/bff-cognito/pkg/trace"
+	"github.com/Macaquit0/Tropical-BFF/pkg/trace"
 	"github.com/rs/zerolog"
 )
 

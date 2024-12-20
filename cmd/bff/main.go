@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"bff-cognito/internal/auth"
-	"bff-cognito/internal/handlers"
+	"github.com/Macaquit0/Tropical-BFF/internal/auth"
+	"github.com/Macaquit0/Tropical-BFF/internal/handlers"
 	"github.com/go-chi/chi/v5"
 )
 

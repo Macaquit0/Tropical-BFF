@@ -3,18 +3,19 @@ package sharedhttp
 import (
 	"encoding/json"
 	"errors"
-	"github.com/backend/bff-cognito/pkg/logger"
+	"io"
+	"log/slog"
+	"net/http"
+	"sync"
+	"time"
+
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httplog/v2"
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
-	"io"
-	"log/slog"
-	"net/http"
-	"sync"
-	"time"
 )
 
 type routerOpts struct {

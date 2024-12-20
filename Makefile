@@ -2,7 +2,7 @@
 container_exists = $(shell docker ps -q -f name=$(1) | grep -q . && echo "1" || echo "0")
 
 # Configurações
-APP_NAME = bff-cognito
+APP_NAME = bff
 DOCKER_COMPOSE_FILE = docker-compose.yaml
 
 # Comandos de setup
