@@ -10,21 +10,21 @@ import (
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var req loginservices.LoginRequest
+	var req loginservices.LoginRequestParams
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		h.log.Error(ctx).Msg("[login-handler] - error on parse login request body. error: %s", err.Error())
 		h.router.ErrorHandler(w, r, err)
 		return
 	}
 
-	token, err := h.services.Login(ctx, req.Email, req.Password)
+	tokenResponse, err := h.services.Login(ctx, req)
 	if err != nil {
 		h.router.ErrorHandler(w, r, err)
 		return
 	}
 
 	response := map[string]string{
-		"token": token,
+		"token": tokenResponse.Token,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

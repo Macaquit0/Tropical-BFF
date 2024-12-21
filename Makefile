@@ -27,8 +27,10 @@ up:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 
 down:
-	@echo "Derrubando os serviços..."
+	@echo "Derrubando os serviços definidos no docker-compose..."
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
+	@echo "Parando todos os containers Docker em execução..."
+	@if [ -n "$$(docker ps -q)" ]; then docker stop $$(docker ps -q); else echo 'Nenhum container em execução para parar.'; fi
 
 restart: down up
 	@echo "Reiniciando os serviços..."

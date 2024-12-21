@@ -1,36 +1,84 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"context"
 	"os"
 
-	"github.com/Macaquit0/Tropical-BFF/internal/auth"
 	"github.com/Macaquit0/Tropical-BFF/internal/handlers"
-	"github.com/go-chi/chi/v5"
+	"github.com/Macaquit0/Tropical-BFF/internal/middleware"
+	"github.com/Macaquit0/Tropical-BFF/internal/services"
+	"github.com/Macaquit0/Tropical-BFF/pkg/config"
+	sharedhttp "github.com/Macaquit0/Tropical-BFF/pkg/http"
+	"github.com/Macaquit0/Tropical-BFF/pkg/jwt"
+	"github.com/Macaquit0/Tropical-BFF/pkg/logger"
+	awsConfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 )
 
-func main() {
-	// Carregar as variáveis de ambiente
-	port := os.Getenv("APP_PORT")
-	region := os.Getenv("COGNITO_REGION")
-	clientID := os.Getenv("COGNITO_APP_CLIENT_ID")
-	userPoolID := os.Getenv("COGNITO_USER_POOL_ID")
-	jwtSecret := os.Getenv("JWT_SECRET")
+type ApiConfig struct {
+	Env             string `env:"API_ENV" envDefault:"development"`
+	HttpPort        string `env:"API_HTTP_PORT" envDefault:"8080"`
+	JwtSecret       string `env:"JWT_SECRET"`
+	CognitoRegion   string `env:"COGNITO_REGION"`
+	CognitoClientID string `env:"COGNITO_APP_CLIENT_ID"`
+}
 
-	// Verificar se as variáveis estão definidas
-	if port == "" || region == "" || clientID == "" || userPoolID == "" || jwtSecret == "" {
-		log.Fatal("Configurações de ambiente incompletas")
+var build = "1.0.0"
+
+const appName = "Tropical-BFF"
+
+func main() {
+	ctx := context.Background()
+	log := logger.New(build, appName)
+
+	if err := run(ctx, log); err != nil {
+		log.Error(ctx).Msg("error on startup %s: %v", appName, err)
+		os.Exit(1)
+	}
+}
+
+func run(ctx context.Context, log *logger.Logger) error {
+	// -------------- Config --------------
+	cfg := ApiConfig{}
+	if err := config.LoadConfigFromEnv(&cfg); err != nil {
+		log.Error(ctx).Msg("error loading config: %v", err)
+		return err
 	}
 
-	// Inicializar o cliente Cognito
-	cognitoClient := auth.NewCognitoClient(region, clientID)
+	// -------------- AWS Cognito --------------
+	awsCfg, err := awsConfig.LoadDefaultConfig(ctx, awsConfig.WithRegion(cfg.CognitoRegion))
+	if err != nil {
+		log.Error(ctx).Msg("error loading AWS config: %v", err)
+		return err
+	}
+	cognitoClient := cognitoidentityprovider.NewFromConfig(awsCfg)
 
-	// Configurar o router
-	router := chi.NewRouter()
-	handlers.RegisterRoutes(router, cognitoClient)
+	// -------------- JWT --------------
+	jwtService := jwt.New(log, cfg.JwtSecret)
 
-	// Iniciar o servidor
-	log.Printf("Servidor rodando na porta %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	// -------------- HTTP Server --------------
+	serverOpts := sharedhttp.ServerOpts{
+		ServerPort:    cfg.HttpPort,
+		ServerVersion: build,
+		ServerEnv:     cfg.Env,
+		ServerName:    appName,
+	}
+	server := sharedhttp.NewServer(log, serverOpts)
+
+	// -------------- Middlewares --------------
+	authMiddleware := middleware.NewJWTMiddleware(log, jwtService)
+
+	// -------------- Services and Handlers --------------
+	authService := services.New(cognitoClient, cfg.CognitoClientID)
+	authHandler := handlers.NewHandler(log, server.Router, authService, authMiddleware)
+
+	authHandler.Routes() // Registrar rotas relacionadas à autenticação
+
+	// -------------- Start Server --------------
+	if err := server.Init(); err != nil {
+		log.Error(ctx).Msg("error initializing server: %v", err)
+		return err
+	}
+
+	return nil
 }

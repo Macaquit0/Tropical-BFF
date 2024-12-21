@@ -37,12 +37,12 @@ func (s *Service) Login(ctx context.Context, request LoginRequestParams) (LoginR
 	// Call Cognito
 	result, err := s.CognitoClient.InitiateAuth(ctx, input)
 	if err != nil {
-		return LoginResponse{}, errors.NewInternalServerError(err, "failed to authenticate user")
+		return LoginResponse{}, errors.NewInternalServerError("failed to call Cognito")
 	}
 
 	// Check response
 	if result.AuthenticationResult == nil || result.AuthenticationResult.IdToken == nil {
-		return LoginResponse{}, errors.NewInternalServerError(nil, "authentication failed: missing token")
+		return LoginResponse{}, errors.NewNotFoundError("authentication failed, missing authentication token")
 	}
 
 	return LoginResponse{

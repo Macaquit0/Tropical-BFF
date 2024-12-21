@@ -1,5 +1,5 @@
 # Usar imagem base do Golang
-FROM golang:1.20
+FROM golang:1.23
 
 # Criar diretório de trabalho
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN go mod tidy
 RUN go build -o bff ./cmd/bff/main.go
 
 # Expor a porta da aplicação
-EXPOSE 8080
+EXPOSE 8082
 
 # Comando para rodar o servidor
 CMD ["./bff"]
