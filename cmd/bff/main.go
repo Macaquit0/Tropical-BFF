@@ -4,9 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/Macaquit0/Tropical-BFF/internal/handlers"
-	"github.com/Macaquit0/Tropical-BFF/internal/middleware"
-	"github.com/Macaquit0/Tropical-BFF/internal/services"
+	"github.com/Macaquit0/Tropical-BFF/internal/domain/authsession"
 	"github.com/Macaquit0/Tropical-BFF/pkg/config"
 	sharedhttp "github.com/Macaquit0/Tropical-BFF/pkg/http"
 	"github.com/Macaquit0/Tropical-BFF/pkg/jwt"
@@ -65,12 +63,9 @@ func run(ctx context.Context, log *logger.Logger) error {
 	}
 	server := sharedhttp.NewServer(log, serverOpts)
 
-	// -------------- Middlewares --------------
-	authMiddleware := middleware.NewJWTMiddleware(log, jwtService)
-
 	// -------------- Services and Handlers --------------
-	authService := services.New(cognitoClient, cfg.CognitoClientID)
-	authHandler := handlers.NewHandler(log, server.Router, authService, authMiddleware)
+	authSessionRepository := authsession.NewRepository(bunDb)
+	authSessionService := authsession.NewService(authSessionRepository, partnerRepository, uid, jwtService)
 
 	authHandler.Routes() // Registrar rotas relacionadas à autenticação
 
